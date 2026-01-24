@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .settings import settings
 from .db import db_healthcheck
+from .telemetry import router as telemetry_router
+from .telemetry.mqtt import start_mqtt_consumer, stop_mqtt_consumer
 
 app = FastAPI(title="Platform API", version=settings.version)
 
@@ -12,6 +14,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(telemetry_router)
+
+@app.on_event("startup")
+def on_startup():
+    start_mqtt_consumer()
+
+@app.on_event("shutdown")
+def on_shutdown():
+    stop_mqtt_consumer()
 
 @app.get("/health")
 def health():

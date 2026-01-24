@@ -4,10 +4,10 @@ WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1     PYTHONUNBUFFERED=1
 
-RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir --upgrade pip uv
 
 COPY requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN uv pip install --system --no-cache-dir -r requirements.txt
 
 COPY app ./app
 

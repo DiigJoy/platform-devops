@@ -1,0 +1,99 @@
+services:
+  mqtt:
+    image: eclipse-mosquitto:2
+    container_name: platform_mqtt
+    ports:
+      - "1883:1883"
+    volumes:
+      - ../mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: platform_influxdb
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: admin123
+      DOCKER_INFLUXDB_INIT_ORG: platform
+      DOCKER_INFLUXDB_INIT_BUCKET: iot_agri
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: dev-token
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+
+  grafana:
+    image: grafana/grafana:10.4.3
+    container_name: platform_grafana
+    ports:
+      - "3001:3000"
+    depends_on:
+      - influxdb
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+  db:
+    image: postgres:16
+    container_name: platform_db
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: platform
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d platform"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: ../../apps/iot-agri/api
+      dockerfile: Dockerfile
+    container_name: iot_agri_api
+    environment:
+      DATABASE_URL: postgresql+psycopg://app:app@db:5432/platform
+      CORS_ORIGINS: http://localhost:3000
+      INFLUXDB_URL: http://influxdb:8086
+      INFLUXDB_TOKEN: dev-token
+      INFLUXDB_ORG: platform
+      INFLUXDB_BUCKET: iot_agri
+      MQTT_BROKER_HOST: mqtt
+      MQTT_BROKER_PORT: "1883"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      influxdb:
+        condition: service_started
+    volumes:
+      - ../../apps/iot-agri/api:/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  web:
+    build:
+      context: ../../apps/iot-agri/web
+      dockerfile: Dockerfile
+    container_name: iot_agri_web
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    volumes:
+      - ../../apps/iot-agri/web:/app
+      - /app/node_modules
+      - /app/.next
+    command: ["npm", "run", "dev", "--", "--hostname", "0.0.0.0", "--port", "3000"]
+
+volumes:
+  pgdata:
+  influxdb_data:
+  grafana_data:

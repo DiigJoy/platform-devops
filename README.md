@@ -1,11 +1,13 @@
-# Fullstack + DevOps Platform (Sprint 0 Foundation)
+# Fullstack + DevOps Platform (Monorepo)
 
-Baseline stack:
+Baseline stack (piloto IoT):
 - **Web**: Next.js (TypeScript, App Router)
 - **API**: FastAPI (Python)
-- **DB**: PostgreSQL
+- **DB**: PostgreSQL (core) + InfluxDB (telemetria)
 - **Local**: Docker Compose
 - **CI**: GitHub Actions (lint/test/build)
+ - **IoT**: MQTT (Mosquitto)
+ - **Dashboards**: Grafana
 
 ## Quick start (local)
 ### 1) Requirements
@@ -15,16 +17,18 @@ Baseline stack:
 
 ### 2) Run everything (dev)
 ```bash
-docker compose up --build
+docker compose -f infra/local/docker-compose.yml up --build
 ```
 - Web: http://localhost:3000
 - API: http://localhost:8000/health
-- DB:  localhost:5432
+- DB (Postgres):  localhost:5433
+- InfluxDB: http://localhost:8086
+- Grafana: http://localhost:3001
 
 ### 3) Dev without Docker (optional)
 ```bash
 # API
-cd apps/api
+cd apps/iot-agri/api
 python -m venv .venv
 # mac/linux: source .venv/bin/activate
 # windows: .venv\Scripts\activate
@@ -32,19 +36,39 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 
 # WEB (new terminal)
-cd apps/web
+cd apps/iot-agri/web
 npm install
 npm run dev
 ```
 
+## Docs
+Ver `docs/README.md` para indices y arquitectura.
+
 ## Repo layout
 ```
 apps/
-  web/     Next.js
-  api/     FastAPI
+  iot-agri/
+    web/     Next.js
+    api/     FastAPI
+  iot-animal/
+  microbiz/
+  diet/
+  finance/
+  journal/
+  store/
+  travel/
+packages/
+  ui/
+  schemas/
+  config/
 infra/
-  docker-compose.yml
+  local/docker-compose.yml
+  terraform/
+  k8s/
 .github/workflows/
   ci.yml
-docs/adr/
+docs/
+  adr/
+  diagrams/
+  README.md
 ```
