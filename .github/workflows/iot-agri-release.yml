@@ -1,0 +1,41 @@
+name: iot-agri release tag
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/iot-agri/**"
+      - ".github/workflows/iot-agri-release.yml"
+      - "scripts/iot-agri-release.sh"
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create release tag for iot-agri
+        run: bash scripts/iot-agri-release.sh
+      - name: Generate iot-agri changelog
+        uses: orhun/git-cliff-action@v3
+        with:
+          config: apps/iot-agri/cliff.toml
+          args: -o apps/iot-agri/CHANGELOG.md
+      - name: Commit changelog if changed
+        run: |
+          if git status --porcelain apps/iot-agri/CHANGELOG.md | grep -q .; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add apps/iot-agri/CHANGELOG.md
+            git commit -m "chore(iot-agri): update changelog [skip ci]"
+            git push origin HEAD:main
+          else
+            echo "No changelog changes; skipping commit."
+          fi
