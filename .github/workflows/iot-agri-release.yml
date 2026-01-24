@@ -23,11 +23,12 @@ jobs:
           fetch-depth: 0
       - name: Create release tag for iot-agri
         run: bash scripts/iot-agri-release.sh
-      - name: Generate iot-agri changelog
-        uses: orhun/git-cliff-action@v3
+      - name: Install git-cliff
+        uses: taiki-e/install-action@v2
         with:
-          config: apps/iot-agri/cliff.toml
-          args: -o apps/iot-agri/CHANGELOG.md
+          tool: git-cliff
+      - name: Generate iot-agri changelog
+        run: git-cliff -c apps/iot-agri/cliff.toml -o apps/iot-agri/CHANGELOG.md
       - name: Commit changelog if changed
         run: |
           if git status --porcelain apps/iot-agri/CHANGELOG.md | grep -q .; then
