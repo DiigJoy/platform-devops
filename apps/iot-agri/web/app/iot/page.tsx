@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 type TelemetryPoint = {
   time: string;
@@ -54,10 +54,7 @@ export default function IoTDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const apiUrl = useMemo(
-    () => `${API_BASE}/iot/last?device_id=${encodeURIComponent(deviceId)}&limit=40`,
-    [deviceId]
-  );
+  const apiUrl = `${API_BASE}/iot/last?device_id=${encodeURIComponent(deviceId)}&limit=40`;
 
   async function loadData() {
     setLoading(true);
