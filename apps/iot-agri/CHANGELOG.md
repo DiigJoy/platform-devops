@@ -75,4 +75,3 @@ This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 - Add pre-commit, changelog, and lint hooks
 
 - Remove lint.sh
-
