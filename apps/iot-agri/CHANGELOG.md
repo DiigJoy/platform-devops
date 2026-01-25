@@ -25,6 +25,12 @@ This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 
 - Skip CI removed
 
+- Update changelog [skip ci]
+
+- Update changelog
+
+- Test
+
 
 ## [iot-agri-v0.0.1] - 2026-01-24
 
@@ -45,3 +51,4 @@ This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 - Add pre-commit, changelog, and lint hooks
 
 - Remove lint.sh
+
