@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-tag_prefix="iot-agri-v"
-app_path="apps/iot-agri"
+tag_prefix="${1:?tag prefix required}"
+shift
+if [[ "$#" -lt 1 ]]; then
+  echo "At least one path is required."
+  exit 1
+fi
+app_paths=("$@")
 
 latest_tag="$(git tag --list "${tag_prefix}*" --sort=-v:refname | head -n 1 || true)"
 if [[ -n "${latest_tag}" ]]; then
@@ -13,9 +18,9 @@ else
   current_version="0.0.0"
 fi
 
-commit_shas="$(git log ${range} --format=%H -- "${app_path}" || true)"
+commit_shas="$(git log ${range} --format=%H -- "${app_paths[@]}" || true)"
 if [[ -z "${commit_shas}" ]]; then
-  echo "No commits touching ${app_path} since ${latest_tag:-start}; skipping tag."
+  echo "No commits touching ${app_paths[*]} since ${latest_tag:-start}; skipping tag."
   exit 0
 fi
 

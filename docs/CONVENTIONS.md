@@ -47,7 +47,7 @@ Tareas largas:
 - Antes de mergear a `main`, reordena/squash si los pasos fueron exploratorios.
 - Mantener `main` limpio y con historia que cuente "que se entrego".
 
-## Reglas de versionado automatico (iot-agri)
+## Reglas de versionado automatico (por componente)
 Basado en SemVer y Conventional Commits, el tag se calcula asi:
 - `BREAKING CHANGE` o `!` en el subject: `X.Y.Z` -> `(X+1).0.0`
 - `feat`: `X.Y.Z` -> `X.(Y+1).0`
@@ -62,32 +62,35 @@ Ejemplo: si el ultimo tag es `iot-agri-v0.4.2` y hay un breaking change, el sigu
 - Patch: `fix(iot-agri): handle null sensor id`
 - Patch: `perf(iot-agri): batch writes to influx`
 
-## Tags por app
-Para releases de `iot-agri`:
-- `iot-agri-vX.Y.Z`
+## Tags por componente
+- Frontend: `iot-agri-web-vX.Y.Z`
+- Backend: `iot-agri-api-vX.Y.Z`
+- Platform/DevOps: `platform-vX.Y.Z`
 
 ## Changelog
-- Mantener en `apps/iot-agri/CHANGELOG.md`.
-- Basado en Conventional Commits y tags `iot-agri-vX.Y.Z`.
+- Frontend: `apps/iot-agri/web/CHANGELOG.md`
+- Backend: `apps/iot-agri/api/CHANGELOG.md`
+- Platform/DevOps: `CHANGELOG.md`
+- Basado en Conventional Commits y tags por componente.
 
 ## Changelog automatico (git-cliff)
-Instalacion:
+El CI usa un template comun y lo parametriza por componente.
+
+Template:
+- `scripts/cliff.template.toml`
+
+Ejemplo manual (frontend iot-agri):
 ```
-cargo install git-cliff
-```
-Generar/actualizar changelog de iot-agri (solo paths de la app):
-```
-git cliff --config apps/iot-agri/cliff.toml --output apps/iot-agri/CHANGELOG.md
-```
-Release:
-```
-git tag iot-agri-v0.1.0
-git cliff --config apps/iot-agri/cliff.toml --output apps/iot-agri/CHANGELOG.md
+sed \
+  -e "s|{{TAG_PATTERN}}|iot-agri-web-v[0-9].*|g" \
+  -e "s|{{INCLUDE_PATHS}}|\"apps/iot-agri/web/**\"|g" \
+  scripts/cliff.template.toml > /tmp/cliff.toml
+git-cliff -c /tmp/cliff.toml -o apps/iot-agri/web/CHANGELOG.md
 ```
 
 ## Flujo automatico de changelog y tags (CI)
-- En cada merge a `main`, el workflow crea el tag `iot-agri-vX.Y.Z` segun Conventional Commits.
-- El changelog de `apps/iot-agri/CHANGELOG.md` se regenera y se commitea automaticamente.
+- En cada merge a `main`, el workflow crea tags por componente segun Conventional Commits.
+- Se regenera el changelog de cada componente afectado y se commitea automaticamente.
 - El desarrollador solo debe escribir commits bien formateados y enfocados.
 
 ## Pre-commit
