@@ -4,6 +4,26 @@ All notable changes to this app will be documented in this file.
 This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 
 
+## [Unreleased]
+
+
+### <!-- 1 -->🐛 Bug Fixes
+
+- Changelog commit pipeline fix
+
+
+### <!-- 2 -->🚜 Refactor
+
+- No useMemo in files, is overkill right now, added relative path for easiest imports
+
+- No useMemo in files, is overkill right now, added… (#3)
+
+
+### <!-- 7 -->⚙️ Miscellaneous Tasks
+
+- Update changelog [skip ci]
+
+
 ## [iot-agri-v0.0.1] - 2026-01-24
 
 
@@ -23,3 +43,4 @@ This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 - Add pre-commit, changelog, and lint hooks
 
 - Remove lint.sh
+
