@@ -31,6 +31,8 @@ This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 
 - Test
 
+- Update changelog
+
 
 ## [iot-agri-v0.0.1] - 2026-01-24
 
