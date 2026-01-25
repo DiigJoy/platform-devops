@@ -7,7 +7,6 @@ from .telemetry.mqtt import start_mqtt_consumer, stop_mqtt_consumer
 
 app = FastAPI(title="Platform API", version=settings.version)
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_list(),
