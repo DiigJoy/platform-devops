@@ -38,6 +38,20 @@ jobs:
       - name: Generate iot-agri changelog
         run: git-cliff -c apps/iot-agri/cliff.toml -o apps/iot-agri/CHANGELOG.md
         if: "${{ steps.last_commit.outputs.message != 'chore(iot-agri): update changelog' }}"
+      - name: Normalize changelog line endings
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("apps/iot-agri/CHANGELOG.md")
+          text = path.read_text()
+          text = text.replace("\r\n", "\n")
+          lines = text.split("\n")
+          while lines and lines[-1] == "":
+            lines.pop()
+          path.write_text("\n".join(lines) + "\n")
+          PY
+        if: "${{ steps.last_commit.outputs.message != 'chore(iot-agri): update changelog' }}"
       - name: Commit changelog if changed
         run: |
           if git status --porcelain apps/iot-agri/CHANGELOG.md | grep -q .; then
