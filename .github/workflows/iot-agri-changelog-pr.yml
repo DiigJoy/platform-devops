@@ -34,7 +34,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add apps/iot-agri/CHANGELOG.md
-            git commit -m "chore(iot-agri): update changelog [skip ci]"
+            git commit -m "chore(iot-agri): update changelog"
             git push origin HEAD:${{ github.head_ref }}
           else
             echo "No changelog changes; skipping commit."
