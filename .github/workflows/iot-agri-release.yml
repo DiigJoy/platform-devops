@@ -31,17 +31,17 @@ jobs:
           - name: iot-agri-web
             tag_prefix: iot-agri-web-v
             app_path: apps/iot-agri/web
-            include_paths: '"apps/iot-agri/web/**"'
+            include_paths_json: '["apps/iot-agri/web/**"]'
             changelog: apps/iot-agri/web/CHANGELOG.md
           - name: iot-agri-api
             tag_prefix: iot-agri-api-v
             app_path: apps/iot-agri/api
-            include_paths: '"apps/iot-agri/api/**"'
+            include_paths_json: '["apps/iot-agri/api/**"]'
             changelog: apps/iot-agri/api/CHANGELOG.md
           - name: platform
             tag_prefix: platform-v
             app_path: infra .github docs packages scripts .pre-commit-config.yaml
-            include_paths: '"infra/**", ".github/**", "docs/**", "packages/**", "scripts/**", ".pre-commit-config.yaml"'
+            include_paths_json: '["infra/**", ".github/**", "docs/**", "packages/**", "scripts/**", ".pre-commit-config.yaml"]'
             changelog: CHANGELOG.md
     steps:
       - name: Check out repo
@@ -63,12 +63,27 @@ jobs:
         if: steps.after_tag.outputs.tag != steps.before_tag.outputs.tag && steps.after_tag.outputs.tag != ''
       - name: Generate changelog
         run: |
-          sed \
-            -e "s|{{TAG_PATTERN}}|${{ matrix.tag_prefix }}[0-9].*|g" \
-            -e "s|^include_path = .*|include_path = [${{ matrix.include_paths }}]|g" \
-            scripts/cliff.template.toml > /tmp/cliff.toml
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import os
+
+          template = Path("scripts/cliff.template.toml").read_text()
+          tag_pattern = f"{os.environ['TAG_PREFIX']}[0-9].*"
+          include_paths = json.loads(os.environ["INCLUDE_PATHS_JSON"])
+          include_list = ", ".join(f'"{p}"' for p in include_paths)
+          template = template.replace("{{TAG_PATTERN}}", tag_pattern)
+          template = template.replace(
+              'include_path = ["__INCLUDE_PATHS__"]',
+              f"include_path = [{include_list}]",
+          )
+          Path("/tmp/cliff.toml").write_text(template)
+          PY
           git-cliff -c /tmp/cliff.toml -o "${{ matrix.changelog }}"
         if: steps.after_tag.outputs.tag != steps.before_tag.outputs.tag && steps.after_tag.outputs.tag != ''
+        env:
+          TAG_PREFIX: ${{ matrix.tag_prefix }}
+          INCLUDE_PATHS_JSON: ${{ matrix.include_paths_json }}
       - name: Normalize changelog line endings
         run: |
           python - <<'PY'
