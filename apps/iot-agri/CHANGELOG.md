@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [iot-agri-v0.0.5] - 2026-01-25
+
+### Changed
+
+- Update changelog for iot-agri-v0.0.4 (#13)
+
+### Fixed
+
+- Cliff Filter Unconventional True
+
 ## [iot-agri-v0.0.4] - 2026-01-25
 
 ### Changed
@@ -31,7 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update changelog [skip ci]
 - No useMemo in files, is overkill right now, added… (#3)
-- Chore/iot agri clean (#5)
 - Testing changelog pipeline (#6)
 
 ### Fixed
@@ -47,12 +56,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add pre-commit, changelog, and lint hooks
 - Add pre-commit, changelog, and lint hooks
 
-### Changed
-
-- Sprint 0: foundation (next+fastapi+postgres+compose+ci)
-- Merge pull request #1 from DiigJoy/chore/iot-agri-precommit
-- Merge pull request #2 from DiigJoy/chore/rm_lint
-
 ### Fixed
 
 - Changelog flow fix
@@ -62,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove lint.sh
 
+[iot-agri-v0.0.5]: https://github.com/DiigJoy/platform-devops/compare/iot-agri-v0.0.4..iot-agri-v0.0.5
 [iot-agri-v0.0.4]: https://github.com/DiigJoy/platform-devops/compare/iot-agri-v0.0.3..iot-agri-v0.0.4
 [iot-agri-v0.0.3]: https://github.com/DiigJoy/platform-devops/compare/iot-agri-v0.0.2..iot-agri-v0.0.3
 [iot-agri-v0.0.2]: https://github.com/DiigJoy/platform-devops/compare/iot-agri-v0.0.1..iot-agri-v0.0.2
