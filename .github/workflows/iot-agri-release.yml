@@ -1,21 +1,48 @@
-name: iot-agri release tag
+name: app release tags
 
 on:
   push:
     branches:
       - main
     paths:
-      - "apps/iot-agri/**"
+      - "apps/**"
+      - "infra/**"
+      - "docs/**"
+      - "packages/**"
+      - "scripts/**"
+      - ".github/**"
+      - ".pre-commit-config.yaml"
+      - "CHANGELOG.md"
       - ".github/workflows/iot-agri-release.yml"
-      - "scripts/iot-agri-release.sh"
+      - "scripts/release.sh"
+      - "scripts/cliff.template.toml"
 
 permissions:
   contents: write
 
 jobs:
-  tag:
+  release:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: iot-agri-web
+            tag_prefix: iot-agri-web-v
+            app_path: apps/iot-agri/web
+            include_paths: '"apps/iot-agri/web/**"'
+            changelog: apps/iot-agri/web/CHANGELOG.md
+          - name: iot-agri-api
+            tag_prefix: iot-agri-api-v
+            app_path: apps/iot-agri/api
+            include_paths: '"apps/iot-agri/api/**"'
+            changelog: apps/iot-agri/api/CHANGELOG.md
+          - name: platform
+            tag_prefix: platform-v
+            app_path: infra .github docs packages scripts .pre-commit-config.yaml
+            include_paths: '"infra/**", ".github/**", "docs/**", "packages/**", "scripts/**", ".pre-commit-config.yaml"'
+            changelog: CHANGELOG.md
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
@@ -23,26 +50,31 @@ jobs:
           fetch-depth: 0
       - name: Capture latest tag (before)
         id: before_tag
-        run: echo "tag=$(git tag --list 'iot-agri-v*' --sort=-v:refname | head -n 1)" >> "$GITHUB_OUTPUT"
-      - name: Create release tag for iot-agri
-        run: bash scripts/iot-agri-release.sh
+        run: echo "tag=$(git tag --list '${{ matrix.tag_prefix }}*' --sort=-v:refname | head -n 1)" >> "$GITHUB_OUTPUT"
+      - name: Create release tag for ${{ matrix.name }}
+        run: bash scripts/release.sh "${{ matrix.tag_prefix }}" ${{ matrix.app_path }}
       - name: Capture latest tag (after)
         id: after_tag
-        run: echo "tag=$(git tag --list 'iot-agri-v*' --sort=-v:refname | head -n 1)" >> "$GITHUB_OUTPUT"
+        run: echo "tag=$(git tag --list '${{ matrix.tag_prefix }}*' --sort=-v:refname | head -n 1)" >> "$GITHUB_OUTPUT"
       - name: Install git-cliff
         uses: taiki-e/install-action@v2
         with:
           tool: git-cliff
         if: steps.after_tag.outputs.tag != steps.before_tag.outputs.tag && steps.after_tag.outputs.tag != ''
-      - name: Generate iot-agri changelog
-        run: git-cliff -c apps/iot-agri/cliff.toml -o apps/iot-agri/CHANGELOG.md
+      - name: Generate changelog
+        run: |
+          sed \
+            -e "s|{{TAG_PATTERN}}|${{ matrix.tag_prefix }}[0-9].*|g" \
+            -e "s|^include_path = .*|include_path = [${{ matrix.include_paths }}]|g" \
+            scripts/cliff.template.toml > /tmp/cliff.toml
+          git-cliff -c /tmp/cliff.toml -o "${{ matrix.changelog }}"
         if: steps.after_tag.outputs.tag != steps.before_tag.outputs.tag && steps.after_tag.outputs.tag != ''
       - name: Normalize changelog line endings
         run: |
           python - <<'PY'
           from pathlib import Path
 
-          path = Path("apps/iot-agri/CHANGELOG.md")
+          path = Path("${{ matrix.changelog }}")
           text = path.read_text()
           text = text.replace("\r\n", "\n")
           lines = text.split("\n")
@@ -55,10 +87,10 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.REPO_BOT_TOKEN }}
-          commit-message: "chore(iot-agri): update changelog for ${{ steps.after_tag.outputs.tag }}"
-          title: "chore(iot-agri): update changelog for ${{ steps.after_tag.outputs.tag }}"
+          commit-message: "chore(${{ matrix.name }}): update changelog for ${{ steps.after_tag.outputs.tag }}"
+          title: "chore(${{ matrix.name }}): update changelog for ${{ steps.after_tag.outputs.tag }}"
           body: "Automated changelog update for ${{ steps.after_tag.outputs.tag }}."
           branch: "changelog/${{ steps.after_tag.outputs.tag }}"
           delete-branch: true
-          add-paths: "apps/iot-agri/CHANGELOG.md"
+          add-paths: "${{ matrix.changelog }}"
         if: steps.after_tag.outputs.tag != steps.before_tag.outputs.tag && steps.after_tag.outputs.tag != ''
