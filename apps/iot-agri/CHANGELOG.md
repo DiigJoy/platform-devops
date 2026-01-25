@@ -15,6 +15,8 @@ This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 
 - Test 3
 
+- Test 4
+
 
 ### <!-- 2 -->🚜 Refactor
 
@@ -26,6 +28,8 @@ This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 - Update changelog [skip ci]
 
 - Testing changelog pipeline
+
+- Update changelog
 
 - Update changelog
 
