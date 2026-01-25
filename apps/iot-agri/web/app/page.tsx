@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 type Health = { status: string; db: string };
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
@@ -10,7 +10,7 @@ export default function Home() {
   const [latencyMs, setLatencyMs] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const apiUrl = useMemo(() => `${API_BASE}/health`, []);
+  const apiUrl = `${API_BASE}/health`;
 
   async function ping() {
     setError(null);
