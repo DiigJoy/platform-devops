@@ -4,20 +4,14 @@ All notable changes to this app will be documented in this file.
 This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 
 
-## [Unreleased]
+## [iot-agri-v0.0.2] - 2026-01-25
 
 
 ### <!-- 1 -->🐛 Bug Fixes
 
-- Test 2
+- PR automatically generated for changelog (#7)
 
-- Test 2
-
-- Test 3
-
-- Test 4
-
-- Test 5
+- PR automatically generated for changelog (#8)
 
 
 ### <!-- 2 -->🚜 Refactor
@@ -29,13 +23,7 @@ This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 
 - Update changelog [skip ci]
 
-- Testing changelog pipeline
-
-- Update changelog
-
-- Update changelog
-
-- Update changelog
+- Testing changelog pipeline (#6)
 
 
 ## [iot-agri-v0.0.1] - 2026-01-24
