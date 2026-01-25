@@ -7,6 +7,8 @@ on:
       - ".github/workflows/iot-agri-changelog-pr.yml"
       - "scripts/iot-agri-release.sh"
       - "apps/iot-agri/cliff.toml"
+    paths-ignore:
+      - "apps/iot-agri/CHANGELOG.md"
 
 permissions:
   contents: write
