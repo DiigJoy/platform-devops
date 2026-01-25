@@ -11,6 +11,8 @@ This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 
 - Changelog commit pipeline fix
 
+- Changelog token flow added
+
 
 ### <!-- 2 -->🚜 Refactor
 
@@ -30,6 +32,26 @@ This project follows Conventional Commits and per-app tags (`iot-agri-vX.Y.Z`).
 - Update changelog
 
 - Test
+
+- Update changelog
+
+- Update changelog
+
+- Update changelog
+
+- Update changelog
+
+- Update changelog
+
+- Update changelog
+
+- Update changelog
+
+- Update changelog
+
+- Update changelog
+
+- Update changelog
 
 - Update changelog
 
