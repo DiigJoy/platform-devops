@@ -16,6 +16,11 @@ repos:
         files: ^apps/iot-agri/api/
   - repo: local
     hooks:
+      - id: commit-msg-conventional
+        name: commit message (conventional)
+        entry: python scripts/commit-msg-validate.py
+        language: system
+        stages: [commit-msg]
       - id: next-lint-iot-agri
         name: next lint (iot-agri)
         entry: npm --prefix apps/iot-agri/web run lint
