@@ -15,6 +15,7 @@ Baseline stack (piloto IoT):
 - Node 18+
 - Python 3.11+
 
+
 ### 2) Run everything (dev)
 ```bash
 docker compose -f infra/local/docker-compose.yml up --build
