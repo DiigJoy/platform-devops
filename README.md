@@ -1,7 +1,11 @@
 # Fullstack + DevOps Platform (Monorepo)
 
+Estrategia del portafolio:
+- **Backends**: Python (FastAPI como base, algo de Django).
+- **Frontends**: React (Next.js para web y React Native en apps mobile).
+
 Baseline stack (piloto IoT):
-- **Web**: Next.js (TypeScript, App Router)
+- **Web**: React (Next.js, App Router)
 - **API**: FastAPI (Python)
 - **DB**: PostgreSQL (core) + InfluxDB (telemetria)
 - **Local**: Docker Compose

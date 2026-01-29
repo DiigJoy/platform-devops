@@ -1,6 +1,6 @@
 # Portfolio Architecture - Multi-Proyecto (IoT, SaaS, Retail, Travel)
 
-Este documento propone una arquitectura profesional y escalable para un portafolio con multiples apps, usando una stack moderna y demostrable "end-to-end". Incluye: organizacion de repos, tecnologias por proyecto, infraestructura, CI/CD, observabilidad y un plan de inicio.
+Este documento propone una arquitectura profesional y escalable para un portafolio con multiples apps, usando una stack moderna y demostrable "end-to-end". La estrategia es consistente: backends en Python (FastAPI como base, algo de Django) y frontends en React (Next.js para web y React Native en mobile). Incluye: organizacion de repos, tecnologias por proyecto, infraestructura, CI/CD, observabilidad y un plan de inicio.
 
 ---
 
@@ -17,18 +17,18 @@ Este documento propone una arquitectura profesional y escalable para un portafol
 ## 2) Arquitectura general (alta nivel)
 
 **Canales**
-- Web (Next.js / Angular)
-- Mobile (React Native o Flutter)
+- Web (React: Next.js / Vite)
+- Mobile (React Native)
 - IoT (MQTT + gateway + ingest)
 
 **Backends**
-- APIs REST + GraphQL (NestJS/Express + FastAPI + Spring Boot)
-- Servicios de streaming/eventos (Kafka)
-- Jobs y workers (Python + Node + Go)
+- APIs REST + GraphQL (FastAPI + Django/DRF + Strawberry)
+- Servicios de streaming/eventos (Kafka o Redpanda)
+- Jobs y workers (Celery, RQ o Prefect)
 
 **Datos**
 - Relacional: PostgreSQL (core, finanzas, ecommerce)
-- NoSQL: DynamoDB o MongoDB (eventos, telemetria, logs)
+- Documental (opcional): MongoDB (eventos, telemetria, logs)
 - Time-series: TimescaleDB o InfluxDB (telemetria IoT)
 - Cache: Redis
 
@@ -45,10 +45,10 @@ Este documento propone una arquitectura profesional y escalable para un portafol
 ### 3.1 IoT Agricultura (sensores en plantaciones)
 **Objetivo**: telemetria en tiempo real, alertas, dashboards.
 **Stack**:
-- IoT: MQTT (AWS IoT Core o EMQX), gateway en Go
-- Backend ingest: FastAPI
-- Normalizacion high-throughput: microservicio en Rust
-- Streaming: Kafka
+- IoT: MQTT (AWS IoT Core o EMQX), gateway en Python
+- Backend ingest: FastAPI (async)
+- Normalizacion high-throughput: servicio Python (async + batch)
+- Streaming: Kafka o Redpanda
 - Data: TimescaleDB + S3
 - Frontend: Next.js + Recharts
 - Alertas: Prometheus Alertmanager + Webhooks/Email
@@ -59,18 +59,18 @@ Este documento propone una arquitectura profesional y escalable para un portafol
 **Objetivo**: control remoto, telemetria + video + mobile app.
 **Stack**:
 - IoT: MQTT + WebRTC (stream video)
-- Backend: NestJS (control y orquestacion)
+- Backend: FastAPI (control y orquestacion)
 - Data: MongoDB (estado dispositivo) + S3 (media)
-- Mobile: Flutter
+- Mobile: React Native
 - Real-time: Socket.io o WebSockets
 
 ### 3.3 Gestor micro-negocios (stock, ventas, compras)
 **Objetivo**: SaaS de gestion integral.
 **Stack**:
-- Backend: Spring Boot (dominio financiero) + PostgreSQL
-- API Gateway: NestJS
-- Frontend: Angular (admin-style)
-- Auth: Keycloak
+- Backend: Django (dominio financiero) + PostgreSQL
+- API Gateway: FastAPI (BFF)
+- Frontend: React (Vite) estilo admin
+- Auth: Keycloak o Django + OIDC
 - Reporting: Metabase o Superset
 
 ### 3.4 App dieta (macros/calorias)
@@ -84,7 +84,7 @@ Este documento propone una arquitectura profesional y escalable para un portafol
 ### 3.5 Finanzas personales
 **Objetivo**: budgeting, inversiones, alertas.
 **Stack**:
-- Backend: Spring Boot + PostgreSQL
+- Backend: Django + PostgreSQL
 - Frontend: Next.js
 - ETL: Python jobs para reportes
 - Seguridad: cifrado a nivel de campo
@@ -92,17 +92,17 @@ Este documento propone una arquitectura profesional y escalable para un portafol
 ### 3.6 Red social tipo diario + IA
 **Objetivo**: journaling, insights diarios/semana/mes.
 **Stack**:
-- Backend: NestJS + PostgreSQL
+- Backend: FastAPI + PostgreSQL
 - IA: Python (FastAPI) + vector DB (pgvector)
 - Frontend: Next.js
-- Background jobs: BullMQ + Redis
+- Background jobs: Celery + Redis
 **Recomendaciones**:
 - Grafo de relaciones y patrones: Memgraph
 
 ### 3.7 Tienda de articulos
 **Objetivo**: ecommerce sencillo y escalable.
 **Stack**:
-- Backend: NestJS + PostgreSQL
+- Backend: FastAPI + PostgreSQL
 - Frontend: Next.js (storefront)
 - Pagos: Stripe
 - Busquedas: OpenSearch o Meilisearch
@@ -110,8 +110,8 @@ Este documento propone una arquitectura profesional y escalable para un portafol
 ### 3.8 Turismo + arriendos mensuales
 **Objetivo**: publicaciones y marketplace de arriendos por mes.
 **Stack**:
-- Backend: Spring Boot (reservas) + PostgreSQL
-- Frontend: Angular o Next.js
+- Backend: Django (reservas) + PostgreSQL
+- Frontend: Next.js
 - Search: OpenSearch
 - Storage: S3
 **Recomendaciones**:
@@ -121,9 +121,9 @@ Este documento propone una arquitectura profesional y escalable para un portafol
 
 ## 4) Servicios compartidos (core platform)
 
-- **Identity**: Keycloak (SSO, OAuth2, OIDC)
+- **Identity**: Keycloak (SSO, OAuth2, OIDC) o Django + OIDC
 - **API Gateway**: Kong o Nginx Ingress
-- **Notifications**: Node + Redis + Email/SMS
+- **Notifications**: Python + Redis + Email/SMS
 - **Billing**: Stripe + webhooks
 - **Files**: S3 + CloudFront
 - **Analytics**: PostHog o Mixpanel (opcional)
@@ -152,8 +152,8 @@ Este documento propone una arquitectura profesional y escalable para un portafol
 
 - **CI**: GitHub Actions
 - **CD**: ArgoCD (GitOps)
-- **Testing**: pytest, Jest, JUnit, k6
-- **Lint**: ruff, eslint, checkstyle
+- **Testing**: pytest, Jest, k6
+- **Lint**: ruff, eslint
 - **Security**: Trivy, Snyk, Dependabot
  - **ETL/Orquestacion**: Prefect (evolucion a Airflow si necesitas DAGs enterprise)
 

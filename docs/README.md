@@ -2,6 +2,7 @@
 
 ## Arquitectura y decisiones
 - `docs/portfolio-architecture.md`
+- `docs/portfolio-context.md`
 - `docs/adr/0002-iot-pilot-ingestion.md`
 
 ## Diagramas

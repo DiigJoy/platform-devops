@@ -1,5 +1,10 @@
 # Convenciones de Git y Versionado
 
+## Stack del portafolio (alineacion tecnica)
+- **Backends**: Python (FastAPI como base, algo de Django).
+- **Frontends**: React (Next.js para web y React Native para mobile).
+- **Variacion controlada**: se permite 1 framework web adicional (ej. Vite + React).
+
 ## Branching
 - `main` siempre estable y desplegable.
 - Ramas cortas por cambio: `feat/`, `fix/`, `chore/`, `docs/`.
@@ -34,7 +39,7 @@ Ejemplos por tipo:
 Buenas practicas (si los commits son la documentacion):
 - Commits pequenos y coherentes (1 idea o 1 cambio claro por commit).
 - El resumen debe explicar el "que" y no el "como" (max ~72 chars).
-- Usa `scope` por app o area: `iot-agri`, `infra`, `docs`, `ci`.
+- Usa `scope` por app o area: `iot-agri`, `iot-animal`, `microbiz`, `infra`, `docs`, `ci`.
 - Evita commits "WIP" en `main`. Si necesitas un checkpoint, hazlo en una rama.
 
 Cuando hacer commit:

@@ -3,9 +3,9 @@
 Este repositorio es un portafolio de 8 apps con el objetivo de demostrar
 desarrollo fullstack, automatizacion de procesos, y practicas SRE/DevOps.
 La meta es usarlo como evidencia de trabajo real para obtener mejores
-ofertas. Cada app aborda un dominio distinto y usa tecnologias y
-herramientas diferentes, pero con una base comun de CI/CD,
-observabilidad y buenas practicas de ingenieria.
+ofertas. Cada app aborda un dominio distinto, pero todas comparten una
+estrategia comun: backends en Python y frontends en React, con una base
+de CI/CD, observabilidad y buenas practicas de ingenieria.
 
 Este material es de estudio, asi que se necesita ayuda para definir cada
 aspecto de forma clara y profesional: arquitectura, roadmap, stack final,
@@ -13,8 +13,8 @@ pruebas, CI/CD, observabilidad, seguridad y operacion.
 
 ## Estado actual
 - Piloto activo: `apps/iot-agri` (IoT Agricultura).
-  - Web: Next.js (App Router).
-  - API: FastAPI.
+  - Web: React (Next.js, App Router).
+  - API: FastAPI (Python).
   - Telemetria: MQTT -> InfluxDB.
   - Dashboards: Grafana.
 - Infra local: `infra/local/docker-compose.yml` levanta MQTT, InfluxDB,
@@ -37,8 +37,12 @@ pruebas, CI/CD, observabilidad, seguridad y operacion.
 8) Travel (turismo + arriendos mensuales).
 
 Cada proyecto debe cubrir un enfoque tecnico distinto (IoT, SaaS, IA,
-ecommerce, data/ETL, search, streaming, mobile, etc.), con tecnologias
-variadas pero integradas en una misma plataforma.
+ecommerce, data/ETL, search, streaming, mobile, etc.), manteniendo una
+base tecnica consistente:
+- **Backend**: Python (FastAPI como foco principal, con algo de Django).
+- **Frontend**: React (Next.js para web y React Native para mobile).
+- **Otros frameworks web**: se puede incluir 1 adicional (por ejemplo,
+  Vite + React) para cubrir lo que mas pide el mercado, sin perder foco.
 
 ## Objetivos del portafolio
 - Demostrar desarrollo fullstack real: APIs, frontend, data y pipelines.
