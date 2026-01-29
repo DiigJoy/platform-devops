@@ -9,4 +9,4 @@
 
 ## Operacion y guias
 - `docs/ci-cd/` (pendiente)
-- `docs/observability/` (pendiente)
+- `docs/observability/logging.md`

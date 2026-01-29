@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://app:app@localhost:5432/platform"
     cors_origins: str = "http://localhost:3000"  # comma-separated allowed origins
     service_name: str = "platform-api"
+    env: str = "local"
+    log_level: str = "INFO"
     version: str = "0.1.0"
     influxdb_url: str = "http://localhost:8086"
     influxdb_token: str = "dev-token"
