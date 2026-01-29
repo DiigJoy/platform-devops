@@ -1,14 +1,14 @@
 import json
-import logging
 from typing import Optional
 
 import paho.mqtt.client as mqtt
+import structlog
 
 from .models import TelemetryIn
 from .influx import write_telemetry
 from ..settings import settings
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 MQTT_TOPIC = "iot/agri/telemetry"
 _client: Optional[mqtt.Client] = None
