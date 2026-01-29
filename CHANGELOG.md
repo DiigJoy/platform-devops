@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [platform-v0.0.3] - 2026-01-29
+
+### Changed
+
+- Update changelog for platform-v0.0.2
+- Feat/logging implementation
+
+### Fixed
+
+- Changelog automatization test
+- Changing directions
+
 ## [platform-v0.0.2] - 2026-01-25
 
 ### Fixed
@@ -48,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove lint.sh
 
+[platform-v0.0.3]: https://github.com/DiigJoy/platform-devops/compare/platform-v0.0.2..platform-v0.0.3
 [platform-v0.0.2]: https://github.com/DiigJoy/platform-devops/compare/platform-v0.0.1..platform-v0.0.2
 [platform-v0.0.1]: https://github.com/DiigJoy/platform-devops/tree/platform-v0.0.1
 
