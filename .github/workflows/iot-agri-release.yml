@@ -12,10 +12,10 @@ on:
       - "scripts/**"
       - ".github/**"
       - ".pre-commit-config.yaml"
-      - "CHANGELOG.md"
       - ".github/workflows/iot-agri-release.yml"
       - "scripts/release.sh"
       - "scripts/cliff.template.toml"
+      - "!**/CHANGELOG.md"
 
 permissions:
   contents: write
