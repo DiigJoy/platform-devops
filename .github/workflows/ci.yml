@@ -7,66 +7,117 @@ on:
       - "!**/CHANGELOG.md"
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      only_changelog: ${{ steps.set.outputs.only_changelog }}
+    steps:
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            changelog:
+              - "**/CHANGELOG.md"
+            other:
+              - "**"
+              - "!**/CHANGELOG.md"
+      - name: Compute changelog-only flag
+        id: set
+        run: |
+          if [ "${{ steps.filter.outputs.changelog }}" = "true" ] && [ "${{ steps.filter.outputs.other }}" = "false" ]; then
+            echo "only_changelog=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "only_changelog=false" >> "$GITHUB_OUTPUT"
+          fi
+
   precommit:
+    needs: changes
     runs-on: ubuntu-latest
     steps:
+      - name: Changelog-only noop
+        if: needs.changes.outputs.only_changelog == 'true'
+        run: echo "Changelog-only change; skipping pre-commit."
       - uses: actions/checkout@v4
+        if: needs.changes.outputs.only_changelog != 'true'
       - uses: actions/setup-python@v5
+        if: needs.changes.outputs.only_changelog != 'true'
         with:
           python-version: "3.11"
       - uses: actions/setup-node@v4
+        if: needs.changes.outputs.only_changelog != 'true'
         with:
           node-version: "20"
           cache: "npm"
           cache-dependency-path: apps/iot-agri/web/package-lock.json
       - name: Install pre-commit
+        if: needs.changes.outputs.only_changelog != 'true'
         run: |
           python -m pip install --upgrade pip
           python -m pip install uv
           uv pip install --system pre-commit
       - name: Install web deps (for next lint hook)
+        if: needs.changes.outputs.only_changelog != 'true'
         run: npm ci
         working-directory: apps/iot-agri/web
       - name: Run pre-commit
+        if: needs.changes.outputs.only_changelog != 'true'
         run: pre-commit run --all-files
 
   api:
+    needs: changes
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: apps/iot-agri/api
     steps:
+      - name: Changelog-only noop
+        if: needs.changes.outputs.only_changelog == 'true'
+        run: echo "Changelog-only change; skipping API checks."
       - uses: actions/checkout@v4
+        if: needs.changes.outputs.only_changelog != 'true'
       - uses: actions/setup-python@v5
+        if: needs.changes.outputs.only_changelog != 'true'
         with:
           python-version: "3.11"
       - name: Install dependencies
+        if: needs.changes.outputs.only_changelog != 'true'
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Import check
+        if: needs.changes.outputs.only_changelog != 'true'
         run: |
           python -c "from app.main import app; print('api import ok')"
       - name: Basic settings check
+        if: needs.changes.outputs.only_changelog != 'true'
         run: |
           python -c "from app.settings import settings; print(settings.version)"
 
   web:
+    needs: changes
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: apps/iot-agri/web
     steps:
+      - name: Changelog-only noop
+        if: needs.changes.outputs.only_changelog == 'true'
+        run: echo "Changelog-only change; skipping web checks."
       - uses: actions/checkout@v4
+        if: needs.changes.outputs.only_changelog != 'true'
       - uses: actions/setup-node@v4
+        if: needs.changes.outputs.only_changelog != 'true'
         with:
           node-version: "20"
           cache: "npm"
           cache-dependency-path: apps/iot-agri/web/package-lock.json
       - name: Install
+        if: needs.changes.outputs.only_changelog != 'true'
         run: |
           npm ci || npm install
       - name: Lint
+        if: needs.changes.outputs.only_changelog != 'true'
         run: npm run lint
       - name: Build
+        if: needs.changes.outputs.only_changelog != 'true'
         run: npm run build
